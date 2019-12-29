@@ -9,7 +9,7 @@ import xbmcplugin
 @router.route('/tv/trakt/popular')
 def tv_popular(page=1):
     for show in metadata.trakt_shows(page=page):
-        li = xbmcgui.ListItem(show['title'])
+        li = metadata.show_listitem(trakt_data=show)
         xbmcplugin.addDirectoryItem(router.handle,
                                     router.build_url(
                                         tv_show,
@@ -41,7 +41,7 @@ def tv_show(tvdbid=None):
 @router.route('/tv/tvdb/season')
 def tv_season(tvdbid=None, season=None):
     for episode in metadata.tvdb_season(tvdbid, season):
-        li = xbmcgui.ListItem(episode['episodeName'])
+        li = metadata.episode_listitem(tvdb_data=episode)
         xbmcplugin.addDirectoryItem(router.handle,
                                     '',
                                     li,
