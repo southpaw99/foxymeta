@@ -60,6 +60,7 @@ def show_listitem(trakt_data=None):
     if trakt_data:
         info.update(translate_info(TRAKT_TRANSLATION, trakt_data))
         art['poster'] = tvdb_poster(trakt_data['ids']['tvdb'])
+        art['fanart'] = tvdb_fanart(trakt_data['ids']['tvdb'])
     li = xbmcgui.ListItem(info['title'])
     li.setInfo('video', info)
     li.setArt(art)
@@ -211,6 +212,7 @@ def trakt_list(user, list_id, _type):
     return result
 
 
+@router.memcache
 @tvdb.jwt_auth
 def tvdb_show(jwt, tvdb_seriesid):
     path = 'series/{}'.format(tvdb_seriesid)
@@ -274,4 +276,11 @@ def tmdb_trending(page=1, media_type='movie', time_window='week'):
 def tvdb_poster(tvdbid):
     baseuri = 'https://artworks.thetvdb.com/banners/'
     path = tvdb_show(tvdbid)['poster']
+    return baseuri + path
+
+
+@router.cache()
+def tvdb_fanart(tvdbid):
+    baseuri = 'https://artworks.thetvdb.com/banners/'
+    path = tvdb_show(tvdbid)['fanart']
     return baseuri + path
